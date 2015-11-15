@@ -33,6 +33,7 @@ if(empty($name)||strlen($name) > 12) {
 	$check['phone'] = false;
 }
 
+
 if($check['name'] == true && $check['sex'] == true && $check['school'] == true && $check['num'] == true &&
  $check['qq'] == true && $check['phone'] == true) {
  	$cleanStudent['name'] = mysql_real_escape_string($name,$con);
@@ -41,12 +42,24 @@ if($check['name'] == true && $check['sex'] == true && $check['school'] == true &
  	$cleanStudent['num'] = mysql_real_escape_string($num,$con);
  	$cleanStudent['qq'] = mysql_real_escape_string($qq,$con);
  	$cleanStudent['phone'] = mysql_real_escape_string($phone,$con);
-	$sql = "insert into students (phone,sex,school,num,qq,name)  values('$cleanStudent[phone]','$cleanStudent[sex]','$cleanStudent[school]','$cleanStudent[num]','$cleanStudent[qq]','$cleanStudent[name]')";
- if (!mysql_query($sql,$con))
- {
-   die('Error: ' . mysql_error());
- }
- echo json_encode(array('code' => 1, 'message' => '报名成功'));
+ 	$sql1 = "SELECT * from students WHERE num = '$cleanStudent[num]' ";
+ 	$result = mysql_query($sql1);
+ 	if($result) {
+ 		$n = mysql_num_rows($result);
+ 		if($n > 0) {
+ 			echo json_encode(array('code' => -1, 'message' => '对不起学号已被注册'));
+ 		} else{
+ 				$sql = "insert into students (phone,sex,school,num,qq,name)  values('$cleanStudent[phone]','$cleanStudent[sex]','$cleanStudent[school]','$cleanStudent[num]','$cleanStudent[qq]','$cleanStudent[name]')";
+ 				 if (!mysql_query($sql,$con))
+ 				 {
+ 				   die('Error: ' . mysql_error());
+ 				 }
+ 			 echo json_encode(array('code' => 1, 'message' => '报名成功'));
+ 		}
+ 	} else {
+ 		die('Error: ' . mysql_error());
+ 	} 
+	
 }
  
  mysql_close($con)
