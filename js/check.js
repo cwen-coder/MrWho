@@ -30,7 +30,12 @@ if(telReg == true&&qreg == true&&nureg == true){
 		},
 		success:function(data,status){
 			data = JSON.parse(data);
-			alert(data['message']);
+			if(data['code'] != 1) {
+				alert(data['message']);
+			} else {
+				alert(data['message']);
+				window.location.href='http://youth.sut.edu.cn';
+			}
 		}
 	})
 	.done(function() {
